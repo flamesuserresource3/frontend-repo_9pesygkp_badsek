@@ -1,28 +1,49 @@
-import { useState } from 'react'
+import React from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import SectionRow from './components/SectionRow';
+
+const makeItems = (prefix, count, startSeed = 1) =>
+  Array.from({ length: count }).map((_, i) => {
+    const id = `${prefix}-${i + startSeed}`;
+    const genres = ['Action', 'Drama', 'Sci-Fi', 'Thriller', 'Comedy', 'Adventure'];
+    const durations = ['1h 45m', '2h 10m', '2h 28m', '2h 02m', '1h 58m'];
+    const ratings = [7.8, 8.2, 9.1, 7.5, 8.7, 8.9];
+    return {
+      id,
+      title: `Title ${i + 1}`,
+      year: 2016 + ((i + startSeed) % 8),
+      duration: durations[(i + startSeed) % durations.length],
+      genre: genres[(i + startSeed) % genres.length],
+      rating: ratings[(i + startSeed) % ratings.length],
+      image: `https://picsum.photos/seed/${encodeURIComponent(id)}/600/900`,
+    };
+  });
 
 function App() {
-  const [count, setCount] = useState(0)
+  const trending = makeItems('trending', 12, 1);
+  const newReleases = makeItems('new', 12, 20);
+  const topRated = makeItems('top', 12, 40);
+  const continueWatching = makeItems('continue', 10, 70);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <main>
+        <Hero />
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 py-12">
+          <SectionRow title="Trending Now" items={trending} />
+          <SectionRow title="New Releases" items={newReleases} />
+          <SectionRow title="Top Rated" items={topRated} />
+          <SectionRow title="Continue Watching" items={continueWatching} />
         </div>
-      </div>
+      </main>
+      <footer className="border-t border-white/10 py-8 text-center text-white/50">
+        © {new Date().getFullYear()} BlueStream — All rights reserved.
+      </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
